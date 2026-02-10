@@ -1,0 +1,22 @@
+export function roundRobin(processes, quantum = 2) {
+  let time = 0;
+  const queue = [...processes];
+  const timeline = [];
+
+  while (queue.length) {
+    const p = queue.shift();
+    const exec = Math.min(p.burst, quantum);
+
+    timeline.push({
+      pid: p.pid,
+      start: time,
+      duration: exec
+    });
+
+    time += exec;
+    p.burst -= exec;
+
+    if (p.burst > 0) queue.push(p);
+  }
+  return timeline;
+}
